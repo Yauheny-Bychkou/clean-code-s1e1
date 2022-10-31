@@ -7,7 +7,7 @@
 
 // Event handling, user interaction is what starts the code execution.
 
-var taskInput = document.getElementById("new-task-name"); //Add a new task.
+var taskInput = document.getElementById("new-task"); //Add a new task.
 var addButton = document.getElementsByTagName("button")[0]; //first button
 var incompleteTaskHolder = document.getElementById("incomplete-tasks"); //ul of #incompleteTasks
 var completedTasksHolder = document.getElementById("completed-tasks"); //completed-tasks
@@ -29,19 +29,28 @@ var createNewTaskElement = function (taskString) {
   var deleteButton = document.createElement("button"); //delete button
   var deleteButtonImg = document.createElement("img"); //delete button image
 
+  listItem.classList.add("todo-main__item");
+
   label.innerText = taskString;
   label.className = "task";
+  label.classList.add("todo-main__label");
 
   //Each elements, needs appending
   checkBox.type = "checkbox";
+  checkBox.classList.add("todo-main__input", "todo-main__input--checkbox");
   editInput.type = "text";
   editInput.className = "task";
+  editInput.classList.add("todo-main__input", "todo-main__input--text", "todo-main__input--none");
 
   editButton.innerText = "Edit"; //innerText encodes special characters, HTML does not.
   editButton.className = "edit";
+  editButton.classList.add("todo-main__button");
 
   deleteButton.className = "delete";
+  deleteButton.classList.add("todo-main__button");
   deleteButtonImg.src = "./remove.svg";
+  deleteButtonImg.alt = "button";
+  deleteButtonImg.classList.add("todo-main__button-img");
   deleteButton.appendChild(deleteButtonImg);
 
   //and appending.
@@ -55,7 +64,7 @@ var createNewTaskElement = function (taskString) {
 
 var addTask = function () {
   console.log("Add Task...");
-  //Create a new list item with the text from the #new-task-name:
+  //Create a new list item with the text from the #new-task:
   if (!taskInput.value) return;
   var listItem = createNewTaskElement(taskInput.value);
 
@@ -90,6 +99,8 @@ var editTask = function () {
   }
 
   //toggle .editmode on the parent.
+  editInput.classList.toggle("todo-main__input--edit");
+  label.classList.toggle("todo-main__label--edit");
   listItem.classList.toggle("edit-mode");
 };
 
@@ -111,6 +122,9 @@ var taskCompleted = function () {
   var listItem = this.parentNode;
   completedTasksHolder.appendChild(listItem);
   bindTaskEvents(listItem, taskIncomplete);
+  document
+    .querySelectorAll("label")
+    [document.querySelectorAll("label").length - 1].classList.add("todo-main__label--complete");
 };
 
 var taskIncomplete = function () {
@@ -121,6 +135,7 @@ var taskIncomplete = function () {
   var listItem = this.parentNode;
   incompleteTaskHolder.appendChild(listItem);
   bindTaskEvents(listItem, taskCompleted);
+  document.querySelector(".todo-main__label--complete").classList.remove("todo-main__label--complete");
 };
 
 var ajaxRequest = function () {
